@@ -1,0 +1,15 @@
+{
+  "version": "1.0",
+  "defaultProvider": "unpkg",
+  "libraries": [
+    {
+      "library": "font-awesome-5-css@5.4.1",
+      "destination": "wwwroot/lib/font-awesome-5-css/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "material-kit@2.0.4",
+      "destination": "wwwroot/lib/material-kit/"
+    }
+  ]
+}
