@@ -21,7 +21,7 @@ namespace MvcBandas.Controllers
         // GET: Bandas
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Banda.ToListAsync());
+            return View(await _context.Bandas.ToListAsync());
         }
 
         // GET: Bandas/Details/5
@@ -32,7 +32,7 @@ namespace MvcBandas.Controllers
                 return NotFound();
             }
 
-            var banda = await _context.Banda
+            var banda = await _context.Bandas
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (banda == null)
             {
@@ -72,7 +72,7 @@ namespace MvcBandas.Controllers
                 return NotFound();
             }
 
-            var banda = await _context.Banda.FindAsync(id);
+            var banda = await _context.Bandas.FindAsync(id);
             if (banda == null)
             {
                 return NotFound();
@@ -123,7 +123,7 @@ namespace MvcBandas.Controllers
                 return NotFound();
             }
 
-            var banda = await _context.Banda
+            var banda = await _context.Bandas
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (banda == null)
             {
@@ -138,15 +138,15 @@ namespace MvcBandas.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var banda = await _context.Banda.FindAsync(id);
-            _context.Banda.Remove(banda);
+            var banda = await _context.Bandas.FindAsync(id);
+            _context.Bandas.Remove(banda);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool BandaExists(int id)
         {
-            return _context.Banda.Any(e => e.Id == id);
+            return _context.Bandas.Any(e => e.Id == id);
         }
     }
 }

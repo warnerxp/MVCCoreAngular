@@ -1,57 +1,23 @@
 ﻿@model MvcBandas.Models.Banda
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Elminar Banda";
 }
 
 <h1>Delete</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Estas seguro que deseas eliminar la banda <strong>@Model.Nombre</strong>? </h3>
 <div>
-    <h4>Banda</h4>
+
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Vocalista)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Vocalista)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NumeroIntegrantes)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NumeroIntegrantes)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.anioFormacion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.anioFormacion)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaRegistro)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaRegistro)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Genero)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Genero)
-        </dd>
-    </dl>
+   
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <button type="submit" class="btn btn-danger">
+            <i class="fa fa-trash-alt"> </i> Eliminar
+        </button>
+        <a asp-action="Index" class="btn btn-info mr-2"> <i class="fa fa-undo"> </i> Regresar</a>
+      
     </form>
 </div>
