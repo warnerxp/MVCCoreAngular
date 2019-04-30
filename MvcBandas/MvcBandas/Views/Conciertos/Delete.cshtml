@@ -1,23 +1,23 @@
-﻿@model MvcBandas.Models.Banda
+﻿@model MvcBandas.Models.Concierto
 
 @{
-    ViewData["Title"] = "Elminar Banda";
+    ViewData["Title"] = "Elminar Concierto";
 }
 
-<h1>Delete</h1>
 
-<h3>Estas seguro que deseas eliminar el concierto <strong>@Model.Nombre</strong>? </h3>
+
+<h3>Estas seguro que deseas eliminar el concierto de la banda <strong>@Model.Banda.Nombre</strong> en @Model.Lugar a las @Model.Fecha.ToString()? </h3>
 <div>
 
     <hr />
-   
-    
+
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <button type="submit" class="btn btn-danger">
             <i class="fa fa-trash-alt"> </i> Eliminar
         </button>
         <a asp-action="Index" class="btn btn-info mr-2"> <i class="fa fa-undo"> </i> Regresar</a>
-      
+
     </form>
 </div>

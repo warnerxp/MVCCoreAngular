@@ -1,0 +1,40 @@
+﻿@model MvcBandas.Models.Concierto
+
+@{
+    ViewData["Title"] = "Detalles del concierto en " + Model.Lugar+" de la banda "+Model.Banda.Nombre;
+}
+
+<h3>@ViewData["Title"]</h3>
+
+<div>
+  
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Lugar)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Lugar)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Banda)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Banda.Nombre)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Fecha)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Fecha)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">
+        <i class="fas fa-pencil-alt"></i>Editar
+    </a>
+    <a asp-action="Index" class="btn btn-info">
+        <i class="fas fa-undo"></i>Regresar
+    </a>
+</div>

@@ -38,6 +38,9 @@ namespace MvcBandas
 
             services.AddDbContext<MvcBandasContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("MvcBandasContext")));
+
+            services.AddDefaultIdentity<Usuario>()
+                .AddEntityFrameworkStores<MvcBandasContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +59,7 @@ namespace MvcBandas
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseCookiePolicy();
 
             app.UseMvc(routes =>

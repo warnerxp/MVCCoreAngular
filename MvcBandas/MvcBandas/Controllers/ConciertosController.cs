@@ -11,62 +11,66 @@ using MvcBandas.Models;
 namespace MvcBandas.Controllers
 {
     [Authorize]
-    public class BandasController : Controller
+    public class ConciertosController : Controller
     {
         private readonly MvcBandasContext _context;
 
-        public BandasController(MvcBandasContext context)
+        public ConciertosController(MvcBandasContext context)
         {
             _context = context;
         }
 
-        // GET: Bandas
+        // GET: Conciertos
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Bandas.ToListAsync());
+            var mvcBandasContext = _context.Conciertos.Include(c => c.Banda);
+            return View(await mvcBandasContext.ToListAsync());
         }
 
-        // GET: Bandas/Details/5
+        // GET: Conciertos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
-            var banda = await _context.Bandas
+            
+            var concierto = await _context.Conciertos
+                .Include(c => c.Banda)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (banda == null)
+            if (concierto == null)
             {
                 return NotFound();
             }
 
-            return View(banda);
+            return View(concierto);
         }
 
-        // GET: Bandas/Create
+        // GET: Conciertos/Create
         public IActionResult Create()
         {
+            ViewData["BandaId"] = new SelectList(_context.Bandas, "Id", "Nombre");
             return View();
         }
 
-        // POST: Bandas/Create
+        // POST: Conciertos/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Vocalista,NumeroIntegrantes,anioFormacion,FechaRegistro,Genero")] Banda banda)
+        public async Task<IActionResult> Create([Bind("Id,Lugar,BandaId,Fecha")] Concierto concierto)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(banda);
+                _context.Add(concierto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(banda);
+            ViewData["BandaId"] = new SelectList(_context.Bandas, "Id", "Nombre", concierto.BandaId);
+            return View(concierto);
         }
 
-        // GET: Bandas/Edit/5
+        // GET: Conciertos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -74,22 +78,25 @@ namespace MvcBandas.Controllers
                 return NotFound();
             }
 
-            var banda = await _context.Bandas.FindAsync(id);
-            if (banda == null)
+            var concierto = await _context.Conciertos
+                .Include(c => c.Banda)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (concierto == null)
             {
                 return NotFound();
             }
-            return View(banda);
+            ViewData["BandaId"] = new SelectList(_context.Bandas, "Id", "Nombre", concierto.BandaId);
+            return View(concierto);
         }
 
-        // POST: Bandas/Edit/5
+        // POST: Conciertos/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Vocalista,NumeroIntegrantes,anioFormacion,FechaRegistro,Genero")] Banda banda)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Lugar,BandaId,Fecha")] Concierto concierto)
         {
-            if (id != banda.Id)
+            if (id != concierto.Id)
             {
                 return NotFound();
             }
@@ -98,12 +105,12 @@ namespace MvcBandas.Controllers
             {
                 try
                 {
-                    _context.Update(banda);
+                    _context.Update(concierto);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BandaExists(banda.Id))
+                    if (!ConciertoExists(concierto.Id))
                     {
                         return NotFound();
                     }
@@ -114,10 +121,11 @@ namespace MvcBandas.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(banda);
+            ViewData["BandaId"] = new SelectList(_context.Bandas, "Id", "Nombre", concierto.BandaId);
+            return View(concierto);
         }
 
-        // GET: Bandas/Delete/5
+        // GET: Conciertos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -125,30 +133,31 @@ namespace MvcBandas.Controllers
                 return NotFound();
             }
 
-            var banda = await _context.Bandas
+            var concierto = await _context.Conciertos
+                .Include(c => c.Banda)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (banda == null)
+            if (concierto == null)
             {
                 return NotFound();
             }
 
-            return View(banda);
+            return View(concierto);
         }
 
-        // POST: Bandas/Delete/5
+        // POST: Conciertos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var banda = await _context.Bandas.FindAsync(id);
-            _context.Bandas.Remove(banda);
+            var concierto = await _context.Conciertos.FindAsync(id);
+            _context.Conciertos.Remove(concierto);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BandaExists(int id)
+        private bool ConciertoExists(int id)
         {
-            return _context.Bandas.Any(e => e.Id == id);
+            return _context.Conciertos.Any(e => e.Id == id);
         }
     }
 }
