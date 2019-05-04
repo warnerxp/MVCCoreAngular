@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MvcBandas.Models;
+using MvcBandas.ViewModels;
 
 namespace MvcBandas.Controllers
 {
@@ -49,8 +50,11 @@ namespace MvcBandas.Controllers
         // GET: Conciertos/Create
         public IActionResult Create()
         {
-            ViewData["BandaId"] = new SelectList(_context.Bandas, "Id", "Nombre");
-            return View();
+            ConciertoCreateViewModel vm = new ConciertoCreateViewModel();
+            vm.Fecha = DateTime.Now;
+            vm.Bandas = ObtenerListaBandas();
+           // ViewData["BandaId"] = new SelectList(_context.Bandas, "Id", "Nombre");
+            return View(vm);
         }
 
         // POST: Conciertos/Create
@@ -58,16 +62,22 @@ namespace MvcBandas.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Lugar,BandaId,Fecha")] Concierto concierto)
+        public async Task<IActionResult> Create([Bind("Id,Lugar,BandaId,Fecha")] ConciertoCreateViewModel vm)
         {
             if (ModelState.IsValid)
             {
+                Concierto concierto = new Concierto {
+
+                    BandaId = vm.BandaId,
+                    Fecha = vm.Fecha,
+                    Lugar = vm.Lugar
+                };
                 _context.Add(concierto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BandaId"] = new SelectList(_context.Bandas, "Id", "Nombre", concierto.BandaId);
-            return View(concierto);
+            vm.Bandas = ObtenerListaBandas();
+            return View(vm);
         }
 
         // GET: Conciertos/Edit/5
@@ -158,6 +168,18 @@ namespace MvcBandas.Controllers
         private bool ConciertoExists(int id)
         {
             return _context.Conciertos.Any(e => e.Id == id);
+        }
+
+        private List<SelectListItem> ObtenerListaBandas()
+        {
+            ConciertoCreateViewModel vm = new ConciertoCreateViewModel();
+            vm.Fecha = DateTime.Now;
+            return vm.Bandas = _context.Bandas.OrderBy(u => u.Nombre)
+                .Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = u.Nombre
+                }).ToList();
         }
     }
 }
