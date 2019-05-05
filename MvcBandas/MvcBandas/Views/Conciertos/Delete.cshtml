@@ -1,4 +1,4 @@
-﻿@model MvcBandas.Models.Concierto
+﻿@model MvcBandas.ViewModels.ConciertoDeleteViewModel
 
 @{
     ViewData["Title"] = "Elminar Concierto";
@@ -6,7 +6,7 @@
 
 
 
-<h3>Estas seguro que deseas eliminar el concierto de la banda <strong>@Model.Banda.Nombre</strong> en @Model.Lugar a las @Model.Fecha.ToString()? </h3>
+<h3>Estas seguro que deseas eliminar el concierto de la banda <strong>@Model.Banda</strong> en @Model.Lugar a las @Model.Fecha? </h3>
 <div>
 
     <hr />

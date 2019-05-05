@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MvcBandas.Models;
 using MvcBandas.ViewModels;
+using X.PagedList;
 
 namespace MvcBandas.Controllers
 {
@@ -22,10 +23,21 @@ namespace MvcBandas.Controllers
         }
 
         // GET: Conciertos
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(ListadoViewModel<Concierto> modelo)
         {
-            var mvcBandasContext = _context.Conciertos.Include(c => c.Banda);
-            return View(await mvcBandasContext.ToListAsync());
+
+            var conciertos = _context.Conciertos.Include(u => u.Banda).Select(c => c);
+
+            if (!string.IsNullOrEmpty(modelo.TerminoBusqueda))
+            {
+                conciertos = conciertos.Where(u => u.Lugar.Contains(modelo.TerminoBusqueda) || u.Banda.Nombre.Contains(modelo.TerminoBusqueda));
+            }
+
+            var numeroPagina = modelo.Pagina ?? 1;
+            var registros = await conciertos.ToPagedListAsync(numeroPagina, 5);
+            modelo.Registros = registros;
+         
+            return View(modelo);
         }
 
         // GET: Conciertos/Details/5
@@ -44,7 +56,14 @@ namespace MvcBandas.Controllers
                 return NotFound();
             }
 
-            return View(concierto);
+            ConciertoDetailsViewModel vm = new ConciertoDetailsViewModel
+            {
+                Id =concierto.Id,
+                Banda = concierto.Banda.Nombre,
+                Fecha = concierto.Fecha,
+                Lugar = concierto.Lugar
+            };
+            return View(vm);
         }
 
         // GET: Conciertos/Create
@@ -95,8 +114,16 @@ namespace MvcBandas.Controllers
             {
                 return NotFound();
             }
-            ViewData["BandaId"] = new SelectList(_context.Bandas, "Id", "Nombre", concierto.BandaId);
-            return View(concierto);
+
+            ConciertoCreateViewModel vm = new ConciertoCreateViewModel();
+            vm.Id = concierto.Id;
+            vm.Fecha = concierto.Fecha;
+            vm.BandaId = concierto.BandaId;
+            vm.Lugar = concierto.Lugar;
+            vm.Bandas = ObtenerListaBandas();
+            vm.Banda = concierto.Banda.Nombre;
+            return View(vm);
+
         }
 
         // POST: Conciertos/Edit/5
@@ -104,9 +131,9 @@ namespace MvcBandas.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Lugar,BandaId,Fecha")] Concierto concierto)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Lugar,BandaId,Fecha")] ConciertoCreateViewModel vm)
         {
-            if (id != concierto.Id)
+            if (id != vm.Id)
             {
                 return NotFound();
             }
@@ -115,12 +142,17 @@ namespace MvcBandas.Controllers
             {
                 try
                 {
-                    _context.Update(concierto);
+                    var conciertoBd = await _context.Conciertos.FindAsync(vm.Id);
+                    conciertoBd.BandaId = vm.BandaId;
+                    conciertoBd.Fecha = vm.Fecha;
+                    conciertoBd.Lugar = vm.Lugar;
+
+                    _context.Update(conciertoBd);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ConciertoExists(concierto.Id))
+                    if (!ConciertoExists(vm.Id))
                     {
                         return NotFound();
                     }
@@ -131,12 +163,12 @@ namespace MvcBandas.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BandaId"] = new SelectList(_context.Bandas, "Id", "Nombre", concierto.BandaId);
-            return View(concierto);
+            vm.Bandas = ObtenerListaBandas();
+            return View(vm);
         }
 
         // GET: Conciertos/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult>    Delete(int? id)
         {
             if (id == null)
             {
@@ -151,7 +183,16 @@ namespace MvcBandas.Controllers
                 return NotFound();
             }
 
-            return View(concierto);
+            ConciertoDeleteViewModel vm = new ConciertoDeleteViewModel
+            {
+                Id = concierto.Id,
+                Banda = concierto.Banda.Nombre,
+                Fecha = concierto.Fecha.ToString(),
+                Lugar = concierto.Lugar
+
+            };
+
+            return View(vm);
         }
 
         // POST: Conciertos/Delete/5

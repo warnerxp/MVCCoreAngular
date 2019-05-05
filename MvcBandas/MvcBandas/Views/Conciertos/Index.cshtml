@@ -1,56 +1,90 @@
-﻿@model IEnumerable<MvcBandas.Models.Concierto>
-
+﻿@model MvcBandas.ViewModels.ListadoViewModel<MvcBandas.Models.Concierto>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Common
 @{
     ViewData["Title"] = "Listado de Conciertos";
 }
 
 <h1>@ViewData["Title"]</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">
-        <i class="fa fa-plus"> Crear Nuevo Concierto</i>
-    </a>
-</p>
+@*<p>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fa fa-plus"> Crear Nuevo Concierto</i>
+        </a>
+    </p>*@
+
+<div class="row">
+    <div class="col-md-6">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus "></i>Crear nuevo concierto
+        </a>
+    </div>
+    <div class="col-md-6">
+        <form asp-action="Index" method="get">
+            <div class="row">
+                <div class="col-md-4">
+                    <input asp-for="TerminoBusqueda" class="form-control" />
+                </div>
+                <div class="col-md-4">
+                    <button name="botonBusqueda" id="botonBusqueda" type="submit" class="btn btn-info">
+                        <i class="fas fa-search"></i>Buscar
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <table class="table table-striped table-hover table-hover">
     <thead class="bg-primary text-white">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Lugar)
+                @Html.DisplayNameFor(model => model.Registros[0].Lugar)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Banda)
+                @Html.DisplayNameFor(model => model.Registros[0].Banda)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Fecha)
+                @Html.DisplayNameFor(model => model.Registros[0].Fecha)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Registros)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Lugar)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Banda.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Fecha)
-            </td>
-            <td class="text-center">
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">
-                    <i class="fas fa-pencil-alt"></i>
-                </a> |
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success btn-sm">
-                    <i class="fas fa-list-ul"></i>
-                </a> |
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">
-                    <i class="fas fa-trash-alt"></i>
-                </a>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Lugar)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Banda.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fecha)
+                </td>
+                <td class="text-center">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success btn-sm">
+                        <i class="fas fa-list-ul"></i>
+                    </a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
+
+@Html.PagedListPager(Model.Registros, page => Url.Action("Index",new { Pagina = page,
+    TerminoBusqueda = Model.TerminoBusqueda}),
+    new PagedListRenderOptions
+    {
+
+        LiElementClasses = new string [] {"page-item"},
+        PageClasses = new string [] {"page-link"}
+    })
+   

@@ -1,7 +1,7 @@
-﻿@model MvcBandas.Models.Concierto
+﻿@model MvcBandas.ViewModels.ConciertoDetailsViewModel
 
 @{
-    ViewData["Title"] = "Detalles del concierto en " + Model.Lugar+" de la banda "+Model.Banda.Nombre;
+    ViewData["Title"] = "Detalles del concierto en " + Model.Lugar+" de la banda "+Model.Banda;
 }
 
 <h3>@ViewData["Title"]</h3>
@@ -20,7 +20,7 @@
             @Html.DisplayNameFor(model => model.Banda)
         </dt>
         <dd class="col-sm-8">
-            @Html.DisplayFor(model => model.Banda.Nombre)
+            @Html.DisplayFor(model => model.Banda)
         </dd>
         <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Fecha)
