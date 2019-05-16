@@ -52,13 +52,7 @@ namespace MvcBandas.Controllers
                 return NotFound();
             }
 
-            ConciertoDetailsViewModel vm = new ConciertoDetailsViewModel
-            {
-                Id =concierto.Id,
-                Banda = concierto.Banda.Nombre,
-                Fecha = concierto.Fecha,
-                Lugar = concierto.Lugar
-            };
+            ConciertoDetailsViewModel vm = _servicioConciertos.CrearConciertoDetailsViewModel(concierto);
             return View(vm);
         }
 
@@ -81,12 +75,7 @@ namespace MvcBandas.Controllers
         {
             if (ModelState.IsValid)
             {
-                Concierto concierto = new Concierto {
-
-                    BandaId = vm.BandaId,
-                    Fecha = vm.Fecha,
-                    Lugar = vm.Lugar
-                };
+                Concierto concierto = _servicioConciertos.CrearConcierto(vm);
                 _context.Add(concierto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -109,15 +98,9 @@ namespace MvcBandas.Controllers
                 return NotFound();
             }
 
-            ConciertoCreateViewModel vm = new ConciertoCreateViewModel();
-            vm.Id = concierto.Id;
-            vm.Fecha = concierto.Fecha;
-            vm.BandaId = concierto.BandaId;
-            vm.Lugar = concierto.Lugar;
+            ConciertoCreateViewModel vm = _servicioConciertos.CrearConcierto(concierto);
             vm.Bandas = ObtenerListaBandas();
-            vm.Banda = concierto.Banda.Nombre;
             return View(vm);
-
         }
 
         // POST: Conciertos/Edit/5
@@ -136,11 +119,7 @@ namespace MvcBandas.Controllers
             {
                 try
                 {
-                    var conciertoBd = await _servicioConciertos.ObtenerPorId(id);
-                    conciertoBd.BandaId = vm.BandaId;
-                    conciertoBd.Fecha = vm.Fecha;
-                    conciertoBd.Lugar = vm.Lugar;
-
+                    var conciertoBd = await _servicioConciertos.CrearConcierto(vm,id);
                     _context.Update(conciertoBd);
                     await _context.SaveChangesAsync();
                 }
@@ -162,28 +141,18 @@ namespace MvcBandas.Controllers
         }
 
         // GET: Conciertos/Delete/5
-        public async Task<IActionResult>    Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
             var concierto = await _servicioConciertos.ObtenerIncluyendoBanda(id.Value);
             if (concierto == null)
             {
                 return NotFound();
             }
-
-            ConciertoDeleteViewModel vm = new ConciertoDeleteViewModel
-            {
-                Id = concierto.Id,
-                Banda = concierto.Banda.Nombre,
-                Fecha = concierto.Fecha.ToString(),
-                Lugar = concierto.Lugar
-
-            };
-
+            ConciertoDeleteViewModel vm = _servicioConciertos.CrearConciertoDeleteViewModel(concierto);
             return View(vm);
         }
 
