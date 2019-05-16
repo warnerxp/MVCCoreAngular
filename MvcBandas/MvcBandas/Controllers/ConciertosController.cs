@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MvcBandas.Models;
+using MvcBandas.Servicios;
 using MvcBandas.ViewModels;
 using X.PagedList;
 
@@ -16,22 +17,19 @@ namespace MvcBandas.Controllers
     public class ConciertosController : Controller
     {
         private readonly MvcBandasContext _context;
+        private readonly ServicioConciertos _servicioConciertos;
 
-        public ConciertosController(MvcBandasContext context)
+        public ConciertosController(MvcBandasContext context,Servicios.ServicioConciertos servicioConciertos)
         {
             _context = context;
+            _servicioConciertos = servicioConciertos;
         }
 
         // GET: Conciertos
         public async Task<IActionResult> Index(ListadoViewModel<Concierto> modelo)
         {
 
-            var conciertos = _context.Conciertos.Include(u => u.Banda).Select(c => c);
-
-            if (!string.IsNullOrEmpty(modelo.TerminoBusqueda))
-            {
-                conciertos = conciertos.Where(u => u.Lugar.Contains(modelo.TerminoBusqueda) || u.Banda.Nombre.Contains(modelo.TerminoBusqueda));
-            }
+            var conciertos = _servicioConciertos.ObtenerConciertos(modelo.TerminoBusqueda);
 
             var numeroPagina = modelo.Pagina ?? 1;
             var registros = await conciertos.ToPagedListAsync(numeroPagina, 5);
@@ -47,10 +45,8 @@ namespace MvcBandas.Controllers
             {
                 return NotFound();
             }
-            
-            var concierto = await _context.Conciertos
-                .Include(c => c.Banda)
-                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var concierto = await _servicioConciertos.ObtenerIncluyendoBanda(id.Value);
             if (concierto == null)
             {
                 return NotFound();
@@ -107,9 +103,7 @@ namespace MvcBandas.Controllers
                 return NotFound();
             }
 
-            var concierto = await _context.Conciertos
-                .Include(c => c.Banda)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var concierto = await _servicioConciertos.ObtenerIncluyendoBanda(id.Value);
             if (concierto == null)
             {
                 return NotFound();
@@ -142,7 +136,7 @@ namespace MvcBandas.Controllers
             {
                 try
                 {
-                    var conciertoBd = await _context.Conciertos.FindAsync(vm.Id);
+                    var conciertoBd = await _servicioConciertos.ObtenerPorId(id);
                     conciertoBd.BandaId = vm.BandaId;
                     conciertoBd.Fecha = vm.Fecha;
                     conciertoBd.Lugar = vm.Lugar;
@@ -175,9 +169,7 @@ namespace MvcBandas.Controllers
                 return NotFound();
             }
 
-            var concierto = await _context.Conciertos
-                .Include(c => c.Banda)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var concierto = await _servicioConciertos.ObtenerIncluyendoBanda(id.Value);
             if (concierto == null)
             {
                 return NotFound();
@@ -200,7 +192,7 @@ namespace MvcBandas.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var concierto = await _context.Conciertos.FindAsync(id);
+            var concierto = await _servicioConciertos.ObtenerPorId(id);
             _context.Conciertos.Remove(concierto);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

@@ -33,7 +33,7 @@ namespace MvcBandas
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
+            services.AddScoped<Servicios.ServicioConciertos>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddDbContext<MvcBandasContext>(options =>
