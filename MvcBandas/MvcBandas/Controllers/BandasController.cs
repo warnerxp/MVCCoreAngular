@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MvcBandas.Models;
+using MvcBandas.ViewModels;
+using X.PagedList;
 
 namespace MvcBandas.Controllers
 {
@@ -20,10 +22,28 @@ namespace MvcBandas.Controllers
             _context = context;
         }
 
-        // GET: Bandas
-        public async Task<IActionResult> Index()
+        //// GET: Bandas
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View(await _context.Bandas.ToListAsync());
+        //}
+
+        // GET: Conciertos
+        public async Task<IActionResult> Index(ListadoViewModel<Banda> modelo)
         {
-            return View(await _context.Bandas.ToListAsync());
+
+            // var conciertos = _servicioConciertos.ObtenerConciertos(modelo.TerminoBusqueda);
+            var bandas =  _context.Bandas.Select(b => b);
+            if (!string.IsNullOrEmpty(modelo.TerminoBusqueda))
+            {
+                bandas = bandas.Where(b => b.Nombre.Contains(modelo.TerminoBusqueda));
+            }
+
+            var numeroPagina = modelo.Pagina ?? 1;
+            var registros = await bandas.ToPagedListAsync(numeroPagina, 5);
+            modelo.Registros = registros;
+
+            return View(modelo);
         }
 
         // GET: Bandas/Details/5
