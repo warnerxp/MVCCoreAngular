@@ -1,73 +1,100 @@
-﻿@model IEnumerable<MvcBandas.Models.Banda>
-
+﻿@model MvcBandas.ViewModels.ListadoViewModel<MvcBandas.Models.Banda>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Common
 @{
     ViewData["Title"] = "Listado de Bandas";
 }
-
 <h1>@ViewData["Title"]</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary" >
-        <i class="fa fa-plus"> Crear Nueva Banda</i>
-    </a>
-</p>
-<table class="table table-striped table-hover table-hover" >
+<div class="row">
+    <div class="col-md-6">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus "></i>Crear nueva banda
+        </a>
+    </div>
+    <div class="col-md-6">
+        <form asp-action="Index" method="get">
+            <div class="row">
+                <div class="col-md-4">
+                    <input asp-for="TerminoBusqueda" class="form-control" />
+                </div>
+                <div class="col-md-4">
+                    <button name="botonBusqueda" id="botonBusqueda" type="submit" class="btn btn-info">
+                        <i class="fas fa-search"></i>Buscar
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<table class="table table-striped table-hover table-hover">
     <thead class="bg-primary text-white">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nombre)
+                @Html.DisplayNameFor(model => model.Registros[0].Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Vocalista)
+                @Html.DisplayNameFor(model => model.Registros[0].Vocalista)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NumeroIntegrantes)
+                @Html.DisplayNameFor(model => model.Registros[0].NumeroIntegrantes)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.anioFormacion)
+                @Html.DisplayNameFor(model => model.Registros[0].anioFormacion)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FechaRegistro)
+                @Html.DisplayNameFor(model => model.Registros[0].FechaRegistro)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Genero)
+                @Html.DisplayNameFor(model => model.Registros[0].Genero)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Vocalista)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumeroIntegrantes)
-            </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.anioFormacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaRegistro)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genero)
-            </td>
-            <td class="text-center">
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">
-                    <i class="fas fa-pencil-alt"></i>
-                </a> |
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success btn-sm">
-                    <i class="fas fa-list-ul"></i>
-                </a> |
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">
-                    <i class="fas fa-trash-alt" ></i>
-                </a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Registros)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Vocalista)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumeroIntegrantes)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.anioFormacion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaRegistro)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genero)
+                </td>
+                <td class="text-center">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success btn-sm">
+                        <i class="fas fa-list-ul"></i>
+                    </a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@Html.PagedListPager(Model.Registros, page => Url.Action("Index",new { Pagina = page,
+    TerminoBusqueda = Model.TerminoBusqueda}),
+    new PagedListRenderOptions
+    {
+
+        LiElementClasses = new string [] {"page-item"},
+        PageClasses = new string [] {"page-link"}
+    })
