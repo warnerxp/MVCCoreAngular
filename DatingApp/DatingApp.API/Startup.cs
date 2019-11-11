@@ -13,9 +13,6 @@ using Microsoft.Extensions.Options;
 using DatingApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 
-
-
-
 namespace DatingApp.API
 {
     public class Startup
@@ -30,7 +27,8 @@ namespace DatingApp.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<Data.DataContext>(x=> x.UseSqlite("Connectionstring"));
+            //services.AddDbContext<Data.DataContext>(x=> x.UseSqlite("Connectionstring"));
+            services.AddDbContext<Data.DataContext>(x=> x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
