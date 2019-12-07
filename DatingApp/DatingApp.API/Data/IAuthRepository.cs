@@ -6,7 +6,7 @@ using DatingApp.API.Models;
 
 namespace DatingApp.API.Data
 {
-    interface IAuthRepository
+    public interface IAuthRepository
     {
         Task<User> Register(User user, string password);
 
