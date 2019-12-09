@@ -30,7 +30,9 @@ namespace DatingApp.API
         {
             //services.AddDbContext<Data.DataContext>(x=> x.UseSqlite("Connectionstring"));
             services.AddDbContext<Data.DataContext>(x=> x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddMvc(option => option.EnableEndpointRouting = false);
             services.AddCors();
             services.AddScoped<IAuthRepository,AuthRepository>();
         }
