@@ -37,7 +37,7 @@ namespace DatingApp.API.Controllers
             //{
             //    return BadRequest(ModelState);
             //}
-
+           // throw new Exception("Strnager things!!!!!");
             userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
 
             if (await _repo.UserExists(userForRegisterDto.Username))
@@ -59,8 +59,7 @@ namespace DatingApp.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto) 
         {
-
-            //throw new Exception("Exception Login Method");
+            //throw new Exception("Computer says no!!!!!");
             var userFromRepo = await _repo.Login(userForLoginDto.Username, userForLoginDto.Password);
 
             if (userFromRepo == null)
@@ -78,7 +77,7 @@ namespace DatingApp.API.Controllers
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            var tokenDescriptor = new SecurityTokenDescriptor 
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(1),
@@ -90,9 +89,12 @@ namespace DatingApp.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return Ok(new {
-                token =tokenHandler.WriteToken(token) 
+            return Ok(new
+            {
+                token = tokenHandler.WriteToken(token)
             });
+
+
         }
     }
 }
