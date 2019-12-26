@@ -10,6 +10,7 @@ export class AuthService {
 
   baseUrl = 'https://localhost:44320/api/auth/';
   jwtHelper = new JwtHelperService();
+  decodedToken: any;
 
 constructor(private http: HttpClient) {}
 
@@ -21,6 +22,8 @@ login(model: any) {
     const user = response;
     if (user) {
       localStorage.setItem('token', user.token);
+      this.decodedToken = this.jwtHelper.decodeToken(user.token);
+      console.log(this.decodedToken);
     }
   } )
 );
@@ -30,8 +33,16 @@ register(model: any) {
 }
 
 loggedIn() {
+
   const  token = localStorage.getItem('token');
-  return !this.jwtHelper.isTokenExpired('token');
+  if (token == null ) {
+    console.log("Es nulo el token");
+    return false;
+  } else {
+console.log('El token no es nulo ');
+    return !this.jwtHelper.isTokenExpired(localStorage.getItem('token'));
+  }
+
 
 }
 
