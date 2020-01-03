@@ -14,7 +14,7 @@
       "launchBrowser": true,
       "launchUrl": "api/values",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "DatingApp.API": {
@@ -23,7 +23,7 @@
       "launchUrl": "api/values",
       "applicationUrl": "https://localhost:44320;http://localhost:44320",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   }
