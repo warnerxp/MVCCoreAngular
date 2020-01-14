@@ -19,8 +19,6 @@ user: User;
   }
 // members/4
   loadUser() {
-    console.log('debug');
-
     this.userService.getUser(this.routes.snapshot.params['id']).subscribe((user: User) => {
       this.user = user;
     }, error => {
