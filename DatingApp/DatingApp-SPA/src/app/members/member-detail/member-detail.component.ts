@@ -15,7 +15,10 @@ user: User;
   constructor(private userService: UserService, private alertify: AlertifyService, private routes: ActivatedRoute ) { }
 
   ngOnInit() {
-    this.loadUser();
+    this.routes.data.subscribe(data => {
+      this.user = data['user'];
+    });
+   // this.loadUser();
   }
 // members/4
   loadUser() {

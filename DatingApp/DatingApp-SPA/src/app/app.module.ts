@@ -21,6 +21,8 @@ import { appRoutes } from './routes';
 import { MemberDetailComponent } from 'src/app/members/member-detail/member-detail.component';
 
 import { MemberCardComponent } from 'src/app/members/member-card/member-card.component';
+import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
+import { MemberListResolver } from './_resolvers/member-list.resolver';
 
 
 export function tokenGetter() {
@@ -56,7 +58,9 @@ return localStorage.getItem('token');
    ],
    providers: [
       AuthService,
-      ErrorInterceptorProvider
+      ErrorInterceptorProvider,
+      MemberDetailResolver,
+      MemberListResolver
    ],
    bootstrap: [
       AppComponent
