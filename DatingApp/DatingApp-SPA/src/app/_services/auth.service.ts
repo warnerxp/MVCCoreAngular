@@ -41,7 +41,7 @@ loggedIn() {
     console.log("Es nulo el token");
     return false;
   } else {
-console.log('El token no es nulo ');
+//console.log('El token no es nulo ');
     return !this.jwtHelper.isTokenExpired(localStorage.getItem('token'));
   }
 
