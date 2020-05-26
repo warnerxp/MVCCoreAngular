@@ -5,8 +5,8 @@ import { Observable } from 'rxjs';
 import { User } from '../_models/user';
 
 //const httpOptions = {
-  //headers: new HttpHeaders({
-   // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+ // headers: new HttpHeaders({
+    //'Authorization': 'Bearer ' + localStorage.getItem('token')
   //})
 //};
 
@@ -25,5 +25,7 @@ constructor(private http: HttpClient) { }
     return this.http.get<User>(this.baseUrl + 'users/' + id);
   }
 
-  
+  updateUser(id: number, user: User) {
+    return this.http.put(this.baseUrl + 'users/' + id, user);
+  }
 }
