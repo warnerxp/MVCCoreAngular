@@ -25,7 +25,6 @@ namespace DatingApp.API.Controllers
         private readonly IDatingRepository _repo;
         private readonly IMapper _mapper;
         private readonly IOptions<CloudinarySettings> _cloudinaryConfig;
-
         private Cloudinary _cloudinary;
           
 
