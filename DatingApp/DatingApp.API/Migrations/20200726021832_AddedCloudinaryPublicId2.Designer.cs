@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatingApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200606031832_p")]
-    partial class p
+    [Migration("20200726021832_AddedCloudinaryPublicId2")]
+    partial class AddedCloudinaryPublicId2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,6 +24,9 @@ namespace DatingApp.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("CloudDinaryPublicId")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("DateAddede")
                         .HasColumnType("TEXT");
 
@@ -32,9 +35,6 @@ namespace DatingApp.API.Migrations
 
                     b.Property<bool>("IsMain")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("PublicId")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Url")
                         .HasColumnType("TEXT");
